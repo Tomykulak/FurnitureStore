@@ -17,69 +17,82 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-
+/**
+ * Component responsible for importing product data from a CSV file.
+ * Reads the file line by line, validates each value, and sets invalid or empty values to null by default.
+ * Implements CommandLineRunner to trigger the import process on application startup.
+ */
 @Component
 public class DataImporter implements CommandLineRunner {
-    private Integer batchCount = 0;
     private final ProductRepository productRepository;
     private final ResourceLoader resourceLoader;
-
+    
     public DataImporter(ProductRepository productRepository, ResourceLoader resourceLoader) {
         this.productRepository = productRepository;
         this.resourceLoader = resourceLoader;
     }
-
+    // Controls product data import on startup; set in application properties.
     @Value("${app.import-products-on-startup:true}")
     private boolean importOnStartup;
 
+    // Executes on every application startup.
+    // If product import is enabled and the repository is empty, triggers the product import process.
     @Override
     public void run(String... args) {
         if (importOnStartup && productRepository.count() == 0) {
-            importProduct();
+            importProducts();
         }
     }
-
-    public void importProduct() {
+    // Imports products from the specified CSV file in batches.
+    // Reads the CSV file from the classpath and processes its contents in batches for efficient database insertion.
+    public void importProducts() {
         Resource resource = resourceLoader.getResource("classpath:static/ikea_data.csv");
         final int BATCH_SIZE = 500;
+        // Read and process products from the CSV file in batches
         try (CSVReader reader = new CSVReader(new InputStreamReader(resource.getInputStream()))) {
             processCsvInBatches(reader, BATCH_SIZE);
         } catch (IOException | CsvValidationException e) {
             System.out.println("Something went wrong: " + e.getMessage());
-        } finally {
-            System.out.println("Finished.");
         }
     }
-
+    // Processes the CSV file in batches, parsing each line into a Product object and saving them in batch.
+    // Skips the header line, applies necessary data transformations, and ensures batch saving for efficiency.
     private void processCsvInBatches(CSVReader reader, int batchSize) throws IOException, CsvValidationException {
         List<Product> batch = new ArrayList<>(batchSize);
         String[] line;
         boolean isFirstLine = true;
+        // Read CSV line by line
         while ((line = reader.readNext()) != null) {
+            // Skip the header line
             if (isFirstLine) {
                 isFirstLine = false;
                 continue;
             }
+            // Truncate overly limit strings in the designer field
             if (line[10].length() > 250) {
                 line[10] = line[10].substring(0, 247) + "...";
             }
-            // Remove pattern like 003.494.44 at the start of the string
+            // Remove product code pattern at the start of the designer field
             line[10] = line[10].replaceFirst("^\\d{3}\\.\\d{3}\\.\\d{2}\\s*", "");
 
+            // Parse product attributes
             Product product = parseProductLine(line);
             if (product != null) {
                 batch.add(product);
-                if (batch.size() == batchSize) {
-                    saveBatch(batch);
-                    batch.clear();
-                }
+            }
+            // Save batch when full
+            if (batch.size() == batchSize) {
+                saveBatch(batch);
+                batch.clear();
             }
         }
+        // Save any remaining products
         if (!batch.isEmpty()) {
             saveBatch(batch);
         }
     }
-
+    // Parses a CSV line and constructs a Product object from its fields.
+    // Returns null if the line is invalid or cannot be parsed.
     private Product parseProductLine(String[] line) {
         try {
             if (line.length < 14) {
@@ -108,7 +121,8 @@ public class DataImporter implements CommandLineRunner {
             return null;
         }
     }
-
+    // Attempts to save the entire batch of products in a single operation.
+    // If the batch save fails, falls back to saving each product individually.
     private void saveBatch(List<Product> batch) {
         try {
             System.out.println("SHOULD Saving " + batch.size() + " products");
@@ -127,7 +141,7 @@ public class DataImporter implements CommandLineRunner {
             }
         }
     }
-
+    // Helper method
     private String[] convertEmptyToNull(String[] line) {
         if (line == null) return null;
         for (int i = 0; i < line.length; i++) {
@@ -138,7 +152,7 @@ public class DataImporter implements CommandLineRunner {
         return line;
     }
 
-    // Helper methods
+    // Helper method
     private Integer parseInteger(String value) {
         try {
             return (value == null) ? null : Integer.parseInt(value);
@@ -146,7 +160,7 @@ public class DataImporter implements CommandLineRunner {
             return null;
         }
     }
-
+    // Helper method
     private BigDecimal parseBigDecimal(String value) {
         try {
             return (value == null || value.equalsIgnoreCase("false old price")) ? null : new BigDecimal(value);
@@ -154,7 +168,7 @@ public class DataImporter implements CommandLineRunner {
             return null;
         }
     }
-
+    // Helper method
     private Boolean parseBoolean(String value) {
         if (value == null) return null;
         if (value.equalsIgnoreCase("true")) return true;
