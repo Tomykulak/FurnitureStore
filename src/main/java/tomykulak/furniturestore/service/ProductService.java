@@ -19,6 +19,23 @@ public class ProductService {
     }
 
     public void createProduct(){
-        Product product = new Product();
+        /*
+        Product product = Product.builder()
+                        .id()
+                        .name()
+                        .category()
+                        .price()
+                        .old_price()
+                        .sellable_online()
+                        .link()
+                        .other_colors()
+                        .short_description()
+                        .designer()
+                        .depth()
+                        .height()
+                        .width()
+                        .build();
+        productRepository.save(product);
+        */
     }
 }
