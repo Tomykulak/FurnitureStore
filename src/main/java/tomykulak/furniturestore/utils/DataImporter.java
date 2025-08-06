@@ -2,6 +2,7 @@ package tomykulak.furniturestore.utils;
 
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
@@ -28,10 +29,14 @@ public class DataImporter implements CommandLineRunner {
         this.resourceLoader = resourceLoader;
     }
 
+    @Value("${app.import-products-on-startup:true}")
+    private boolean importOnStartup;
 
     @Override
     public void run(String... args) {
-        importProduct();
+        if (importOnStartup && productRepository.count() == 0) {
+            importProduct();
+        }
     }
 
     public void importProduct() {
@@ -113,7 +118,9 @@ public class DataImporter implements CommandLineRunner {
             System.out.println("Batch failed, saving individually...");
             for (Product p : batch) {
                 try {
-                    productRepository.save(p);
+                    if (!productRepository.existsById(p.getId())) {
+                        productRepository.save(p);
+                    }
                 } catch (Exception ex) {
                     System.out.println("Failed to save product: " + p + " Reason: " + ex.getMessage());
                 }
