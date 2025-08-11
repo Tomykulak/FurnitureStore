@@ -16,8 +16,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -95,6 +94,19 @@ class ProductServiceTest {
 
         assertNotNull(updatedProduct);
         assertEquals(product.getName(), updatedProduct.getName());
+        verify(productRepository).save(product);
+    }
+
+    @Test
+    void deleteProduct() {
+        UUID productId = product.getId();
+        when(productRepository.findById(productId)).thenReturn(Optional.of(product));
+        when(productRepository.save(product)).thenReturn(product);
+
+        Product deletedProduct = productService.deleteProduct(productId);
+
+        assertTrue(deletedProduct.getIsDeleted(), "Product should be marked as deleted");
+        verify(productRepository).findById(productId);
         verify(productRepository).save(product);
     }
 }

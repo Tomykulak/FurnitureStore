@@ -53,10 +53,8 @@ public class ProductService {
 
     @Transactional
     public Product deleteProduct(UUID id) {
-        Product product = getProductById(id);
-        if (product == null) {
-            throw new EntityNotFoundException("Product not found with id: " + id);
-        }
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Product not found with id: " + id));
         product.setIsDeleted(true);
         return productRepository.save(product);
     }
