@@ -2,10 +2,12 @@ package tomykulak.furniturestore.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import tomykulak.furniturestore.dto.ProductDto;
 import tomykulak.furniturestore.exception.NotFoundException;
 import tomykulak.furniturestore.model.Product;
 import tomykulak.furniturestore.repository.ProductRepository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -22,24 +24,29 @@ public class ProductService {
         return this.productRepository.findById(id).orElseThrow(NotFoundException::new);
     }
 
-    public void createProduct(){
-        /*
+    public List<Product> getAllProducts(){
+        return this.productRepository.findAll();
+    }
+
+    public Product createProduct(ProductDto productDto){
         Product product = Product.builder()
-                        .id()
-                        .name()
-                        .category()
-                        .price()
-                        .old_price()
-                        .sellable_online()
-                        .link()
-                        .other_colors()
-                        .short_description()
-                        .designer()
-                        .depth()
-                        .height()
-                        .width()
+                        .name(productDto.getName())
+                        .category(productDto.getCategory())
+                        .price(productDto.getPrice())
+                        .oldPrice(productDto.getOldPrice())
+                        .sellableOnline(productDto.getSellableOnline())
+                        .link(productDto.getLink())
+                        .otherColors(productDto.getOtherColors())
+                        .shortDescription(productDto.getShortDescription())
+                        .designer(productDto.getDesigner())
+                        .depth(productDto.getDepth())
+                        .height(productDto.getHeight())
+                        .width(productDto.getWidth())
                         .build();
-        productRepository.save(product);
-        */
+        return productRepository.save(product);
+    }
+
+    public Product updateProduct(Product product){
+        return this.productRepository.save(product);
     }
 }
