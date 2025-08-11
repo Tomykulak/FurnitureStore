@@ -8,7 +8,7 @@ import org.springframework.security.web.SecurityFilterChain;
 
 // Temporary fix for security bypass
 
-@org.springframework.context.annotation.Configuration
+@Configuration
 public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
