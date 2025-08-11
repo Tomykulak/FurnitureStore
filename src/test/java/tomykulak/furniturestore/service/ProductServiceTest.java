@@ -3,14 +3,51 @@ package tomykulak.furniturestore.service;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
+import tomykulak.furniturestore.dto.ProductDto;
+import tomykulak.furniturestore.model.Product;
+import tomykulak.furniturestore.repository.ProductRepository;
+
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 
-@SpringBootTest
 class ProductServiceTest {
+    @Mock
+    private ProductRepository productRepository;
+
+    @InjectMocks
+    private ProductService productService;
+
+    private Product product;
+    private ProductDto productDto;
 
     @BeforeEach
     void setUp() {
+        MockitoAnnotations.openMocks(this);
+
+        product = Product.builder()
+                .id(UUID.randomUUID())
+                .name("TestName")
+                .category("TestCategory")
+                .price(BigDecimal.valueOf(99.99))
+                .build();
+
+        productDto = new ProductDto();
+        productDto.setName("TestName");
+        productDto.setCategory("TestCategory");
+        productDto.setPrice(BigDecimal.valueOf(99.99));
     }
 
     @AfterEach
@@ -19,17 +56,45 @@ class ProductServiceTest {
 
     @Test
     void getProductById() {
+        when(productRepository.findById(product.getId())).thenReturn(Optional.of(product));
+
+        Product productFound = productService.getProductById(product.getId());
+
+        assertNotNull(productFound);
+        assertEquals(product.getName(), productFound.getName());
+        verify(productRepository).findById(product.getId());
     }
 
     @Test
     void getAllProducts() {
+        when(productRepository.findAll()).thenReturn(List.of(product));
+
+        var productsFound = productService.getAllProducts();
+
+        assertNotNull(productsFound);
+        assertEquals(product.getName(), productsFound.get(0).getName());
+        verify(productRepository).findAll();
     }
 
     @Test
     void createProduct() {
+        when(productRepository.save(any(Product.class))).thenReturn(product);
+
+        Product productCreated = productService.createProduct(productDto);
+
+        assertNotNull(productCreated);
+        assertEquals(productDto.getName(), productCreated.getName());
+        verify(productRepository).save(any(Product.class));
     }
 
     @Test
     void updateProduct() {
+        when(productRepository.save(product)).thenReturn(product);
+
+        Product updatedProduct = productService.updateProduct(product);
+
+        assertNotNull(updatedProduct);
+        assertEquals(product.getName(), updatedProduct.getName());
+        verify(productRepository).save(product);
     }
 }
