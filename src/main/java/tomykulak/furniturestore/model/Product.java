@@ -2,8 +2,8 @@ package tomykulak.furniturestore.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.math.BigDecimal;
+import java.util.UUID;
 
 
 @Entity
@@ -13,7 +13,9 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class Product {
     @Id
-    private Integer id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
+
     private String name;
     private String category;
     private BigDecimal price;
