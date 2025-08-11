@@ -14,8 +14,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Component responsible for importing product data from a CSV file.
@@ -96,11 +96,11 @@ public class DataImporter implements CommandLineRunner {
     private Product parseProductLine(String[] line) {
         try {
             if (line.length < 14) {
-                System.out.println("Skipping short line: " + Arrays.toString(line));
                 return null;
             }
             line = convertEmptyToNull(line);
             return Product.builder()
+                    .id(UUID.randomUUID())
                     .name(line[2])
                     .category(line[3])
                     .price(parseBigDecimal(line[4]))
@@ -124,18 +124,15 @@ public class DataImporter implements CommandLineRunner {
     // If the batch save fails, falls back to saving each product individually.
     private void saveBatch(List<Product> batch) {
         try {
-            System.out.println("SHOULD Saving " + batch.size() + " products");
             productRepository.saveAll(batch);
-            System.out.println("SAVED");
         } catch (Exception e) {
             System.out.println("Batch failed, saving individually...");
-            for (Product p : batch) {
+            for (Product productBatch : batch) {
                 try {
-                    if (!productRepository.existsById(p.getId())) {
-                        productRepository.save(p);
-                    }
+                    productRepository.save(productBatch);
+                    System.out.println("Saved product " + productBatch.getName());
                 } catch (Exception ex) {
-                    System.out.println("Failed to save product: " + p + " Reason: " + ex.getMessage());
+                    System.out.println("Failed to save product: " + productBatch + " Reason: " + ex.getMessage());
                 }
             }
         }

@@ -8,7 +8,6 @@ import tomykulak.furniturestore.model.Product;
 import tomykulak.furniturestore.repository.ProductRepository;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service

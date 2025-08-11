@@ -28,4 +28,8 @@ public class Product {
     private Integer depth;
     private Integer height;
     private Integer width;
+
+    @Column(nullable = false)
+    @Builder.Default
+    private Boolean isDeleted = false;
 }

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="1" author="Tomykulak">
+        <createTable tableName="product">
+            <column name="id" type="VARCHAR(36)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="category" type="VARCHAR(255)"/>
+            <column name="price" type="DECIMAL(19,2)"/>
+            <column name="old_price" type="DECIMAL(19,2)"/>
+            <column name="sellable_online" type="BOOLEAN"/>
+            <column name="link" type="VARCHAR(255)"/>
+            <column name="other_colors" type="BOOLEAN"/>
+            <column name="short_description" type="VARCHAR(255)"/>
+            <column name="designer" type="VARCHAR(255)"/>
+            <column name="depth" type="INT"/>
+            <column name="height" type="INT"/>
+            <column name="width" type="INT"/>
+            <column name="is_deleted" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>
