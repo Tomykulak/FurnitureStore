@@ -1,2 +1,2 @@
 # FurnitureStore
-Backend server SpringBootApp, Lombok, JBDC, Security
+Backend server SpringBootApp, Lombok, JPA, Security
