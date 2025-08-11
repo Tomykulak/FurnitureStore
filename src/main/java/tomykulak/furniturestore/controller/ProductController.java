@@ -47,7 +47,7 @@ public class ProductController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteProductById(@PathVariable UUID id){
-        // TODO: Delete product
+    public Product deleteProductById(@PathVariable UUID id){
+        return productService.deleteProduct(id);
     }
 }
