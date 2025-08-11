@@ -71,7 +71,7 @@ class ProductServiceTest {
         var productsFound = productService.getAllProducts();
 
         assertNotNull(productsFound);
-        assertEquals(product.getName(), productsFound.get(0).getName());
+        assertEquals(product.getName(), productsFound.getFirst().getName());
         verify(productRepository).findAll();
     }
 
