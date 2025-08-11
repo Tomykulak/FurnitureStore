@@ -4,10 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import tomykulak.furniturestore.config.ApiPaths;
 import tomykulak.furniturestore.service.ProductService;
 
 @RestController
-@RequestMapping("api/v1/")
+@RequestMapping(ApiPaths.BASE_API)
 public class ProductController {
     private final ProductService productService;
 
@@ -16,7 +17,7 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @GetMapping("furniture")
+    @GetMapping("products")
     public String sayHello(){
         return productService.sayHello();
     }

@@ -26,7 +26,7 @@ import java.util.List;
 public class DataImporter implements CommandLineRunner {
     private final ProductRepository productRepository;
     private final ResourceLoader resourceLoader;
-    
+
     public DataImporter(ProductRepository productRepository, ResourceLoader resourceLoader) {
         this.productRepository = productRepository;
         this.resourceLoader = resourceLoader;
