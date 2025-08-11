@@ -32,7 +32,7 @@ It supports CRUD operations, soft deletion, and uses an H2 database for persiste
 
 1. **Clone the repository**
     ```bash
-    git clone https://github.com/yourusername/furniturestore.git
+    git clone https://github.com/Tomykulak/FurnitureStore.git
     cd furniturestore
     ```
 
