@@ -47,10 +47,11 @@ It supports CRUD operations, soft deletion, and uses an H2 database for persiste
 
 3. **Access the application**
     - Main app: [http://localhost:8080](http://localhost:8080)
-    - H2 Console: [http://localhost:8080/h2-console](http://localhost:8080/h2-console)
+    - H2 Console: [H2 Console](http://localhost:8080/h2-console)
         - **JDBC URL:** `jdbc:h2:file:./data/furnituredb;AUTO_SERVER=TRUE`
         - **Username:** `sa`
         - **Password:** *(leave blank)*
+    - Swagger anotations: [Swagger docs](http://localhost:8080/swagger-ui/index.html)
 
 ### Configuration
 

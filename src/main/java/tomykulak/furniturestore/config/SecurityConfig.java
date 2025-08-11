@@ -17,7 +17,13 @@ public class SecurityConfig {
                 .headers(AbstractHttpConfigurer::disable // Disables all default headers, including frame options
                 )
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/h2-console/**").permitAll()
+                        .requestMatchers(
+                                "/h2-console/**",
+                                "/swagger-ui/**",
+                                "/swagger-ui.html",
+                                "/v3/api-docs/**",
+                                "/v3/api-docs.yaml"
+                        ).permitAll()
                         .anyRequest().authenticated()
                 );
         return http.build();
