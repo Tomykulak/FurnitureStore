@@ -14,6 +14,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.ignoringRequestMatchers("/h2-console/**"))
+                .csrf(AbstractHttpConfigurer::disable)
                 .headers(AbstractHttpConfigurer::disable // Disables all default headers, including frame options
                 )
                 .authorizeHttpRequests(authz -> authz
@@ -22,7 +23,8 @@ public class SecurityConfig {
                                 "/swagger-ui/**",
                                 "/swagger-ui.html",
                                 "/v3/api-docs/**",
-                                "/v3/api-docs.yaml"
+                                "/v3/api-docs.yaml",
+                                "/api/v1/**"
                         ).permitAll()
                         .anyRequest().authenticated()
                 );
