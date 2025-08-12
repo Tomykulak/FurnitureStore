@@ -1,11 +1,10 @@
 package tomykulak.furniturestore.service;
 
-import jakarta.persistence.EntityNotFoundException;
+import tomykulak.furniturestore.exception.NotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tomykulak.furniturestore.dto.ProductDto;
-import tomykulak.furniturestore.exception.NotFoundException;
 import tomykulak.furniturestore.model.Product;
 import tomykulak.furniturestore.repository.ProductRepository;
 
@@ -53,8 +52,11 @@ public class ProductService {
 
     @Transactional
     public Product deleteProduct(UUID id) {
+        if(!this.productRepository.existsById(id)){
+            throw new NotFoundException();
+        }
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Product not found with id: " + id));
+                .orElseThrow(() -> new NotFoundException("Product not found with id: " + id));
         product.setIsDeleted(true);
         return productRepository.save(product);
     }
