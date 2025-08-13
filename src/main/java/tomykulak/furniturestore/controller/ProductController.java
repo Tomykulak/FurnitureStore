@@ -47,8 +47,9 @@ public class ProductController {
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    @Operation(summary = "Update product by id", description = "Updates a single product")
-    public Product updateProduct(@PathVariable UUID id, @RequestBody Product product){
+    @Operation(summary = "Update product", description = "Updates a single product")
+    public Product updateProduct(/*@PathVariable UUID id, */@RequestBody Product product){
+        // TODO: Use correctly id for a specific product or send whole product?
         return productService.updateProduct(product);
     }
 
