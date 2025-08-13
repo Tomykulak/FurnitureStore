@@ -100,7 +100,6 @@ public class DataImporter implements CommandLineRunner {
             }
             line = convertEmptyToNull(line);
             return Product.builder()
-                    .id(UUID.randomUUID())
                     .name(line[2])
                     .category(line[3])
                     .price(parseBigDecimal(line[4]))
